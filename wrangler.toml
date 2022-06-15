@@ -1,0 +1,31 @@
+# block-service wrangler config.
+name = "block-service"
+main = "./dist/worker.mjs"
+compatibility_date = "2022-05-11"
+
+[build]
+command = "npm run build"
+
+# PROD!
+[env.production]
+# name = "block-service-production"
+account_id = "fffa4b4363a7e5250af8357087263b3a" # Protocol Labs CF account
+route = "block.web3.storage/*"
+
+[[env.production.r2_buckets]]
+bucket_name = "blockstore"
+binding = "BLOCKSTORE"
+
+# Staging!
+[env.staging]
+# name = "block-service-staging"
+account_id = "fffa4b4363a7e5250af8357087263b3a" # Protocol Labs CF account
+route = "block-staging.web3.storage/*"
+
+[[env.staging.r2_buckets]]
+bucket_name = "blockstore-staging"
+binding = "BLOCKSTORE"
+
+# Test!
+[env.test]
+workers_dev = true
