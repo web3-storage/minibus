@@ -1,6 +1,6 @@
-# edge-block-service
+# minibus 🚐
 
-> A block service in the edge to store IPFS data structures
+> A edge block service to store IPFS data structures
 
 ## Getting started
 
@@ -61,7 +61,9 @@ TODO: curl example
 
 The block data is retrieved and discovered by multihash, in order to enable the same data to be referred to with different codecs.
 
-TODO: curl example
+```sh
+curl -X GET -H 'Authorization: Bearer YOUR_API_KEY' https://minibus.web3.storage/bciqjhirzogurjzpkzpykrusrktg2gcodyhds7o4zctkhyyhtznublca
+```
 
 ### 🔒 `PUT /car`
 
@@ -75,7 +77,7 @@ TODO: curl example
 
 TODO: curl example
 
-## Rate limiting
+## Authentication
 
 TODO
 

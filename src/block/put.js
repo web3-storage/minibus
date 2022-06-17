@@ -24,6 +24,7 @@ export async function blockPut (request, env) {
 
   // Base 32 encoded for R2 key
   const key = base32.encode(digest.bytes)
+  // TODO: code, digest...
   await env.BLOCKSTORE.put(key, data)
 
   return new JSONResponse({

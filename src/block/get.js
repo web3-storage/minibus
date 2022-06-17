@@ -28,8 +28,8 @@ export async function blockGet (request, env, ctx) {
 
   let base
   try {
-    const multihashPrefix = multihash[0]
-    base = await env.bases.getBase(multihashPrefix)
+    const multibasePrefix = multihash[0]
+    base = await env.bases.getBase(multibasePrefix)
   } catch (err) {
     throw new BaseNotFoundError()
   }

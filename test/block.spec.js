@@ -26,8 +26,6 @@ test('can put and get block with default multihash', async (t) => {
   const blockPutResult = await putResponse.json()
   t.truthy(blockPutResult.multihash)
 
-  console.log('multihash: ' + blockPutResult.multihash)
-
   const getResponse = await mf.dispatchFetch(`https://localhost:8787/${blockPutResult.multihash}`)
   const getBlob = await getResponse.blob()
   t.deepEqual(putBlob.size, getBlob.size)

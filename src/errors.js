@@ -28,3 +28,12 @@ export class BaseNotFoundError extends HTTPError {
   }
 }
 BaseNotFoundError.CODE = 'ERROR_BASE_NOT_FOUND'
+
+export class CarNotFoundError extends HTTPError {
+  constructor (msg = 'Requested car not found') {
+    super(msg, 401)
+    this.name = 'CarNotFound'
+    this.code = CarNotFoundError.CODE
+  }
+}
+CarNotFoundError.CODE = 'ERROR_CAR_NOT_FOUND'
