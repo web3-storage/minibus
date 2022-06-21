@@ -44,7 +44,9 @@ You only need to `npm dev` for subsequent runs. PR your env config to the `wrang
 
 ## High level architecture
 
-TODO
+The Edge HTTP internal API to store IPFS data structures on R2.
+
+![High level Architecture](./minibus.web3.storage-api.jpg)
 
 ## Usage
 
