@@ -7,18 +7,21 @@ import { equals } from 'uint8arrays/equals'
 import { CarReader, CarBlockIterator } from '@ipld/car'
 
 import { getMiniflare } from './scripts/utils.js'
+import { createTestToken } from './scripts/helpers.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-test.beforeEach((t) => {
+test.beforeEach(async (t) => {
+  const token = await createTestToken()
   // Create a new Miniflare environment for each test
   t.context = {
-    mf: getMiniflare()
+    mf: getMiniflare(),
+    token
   }
 })
 
 test('can put a car and read it', async (t) => {
-  const { mf } = t.context
+  const { mf, token } = t.context
 
   const rootCid = 'bafybeicpxveeln3sd4scqlacrunxhzmvslnbgxa72evmqg7r27emdek464'
   const carPath = path.join(__dirname, 'fixtures', `${rootCid}.car`)
@@ -27,11 +30,14 @@ test('can put a car and read it', async (t) => {
   // Put CAR to block service
   const putResponse = await mf.dispatchFetch('https://localhost:8787/car', {
     method: 'PUT',
-    body: carStreamPutRequest
+    body: carStreamPutRequest,
+    headers: { Authorization: `Bearer ${token}` }
   })
   t.deepEqual(putResponse.status, 200)
 
-  const getResponse = await mf.dispatchFetch(`https://localhost:8787/car/${rootCid}`)
+  const getResponse = await mf.dispatchFetch(`https://localhost:8787/car/${rootCid}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
   t.deepEqual(getResponse.status, 200)
 
   const responseReader = await CarReader.fromIterable(getResponse.body)
@@ -52,11 +58,13 @@ test('can put a car and read it', async (t) => {
 })
 
 test('fails to get CAR not previously added', async (t) => {
-  const { mf } = t.context
+  const { mf, token } = t.context
 
   const rootCid = 'bafybeicpxveeln3sd4scqlacrunxhzmvslnbgxa72evmqg7r27emdek464'
-  const getResponse = await mf.dispatchFetch(`https://localhost:8787/car/${rootCid}`)
+  const getResponse = await mf.dispatchFetch(`https://localhost:8787/car/${rootCid}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
 
-  t.deepEqual(getResponse.status, 401)
+  t.deepEqual(getResponse.status, 404)
   t.deepEqual(await getResponse.text(), `"Cannot find car index with cid ${rootCid}"`)
 })

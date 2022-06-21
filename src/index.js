@@ -2,6 +2,7 @@
 
 import { Router } from 'itty-router'
 
+import { withAuthToken } from './auth.js'
 import { envAll } from './env.js'
 import { errorHandler } from './error-handler.js'
 import { addCorsHeaders, withCorsHeaders } from './cors.js'
@@ -13,14 +14,18 @@ import { blockGet } from './block/get.js'
 
 const router = Router()
 
+const auth = {
+  '🤲': (handler) => withCorsHeaders(handler),
+  '🔒': (handler) => withCorsHeaders(withAuthToken(handler))
+}
+
 router
   .all('*', envAll)
-  .get('/version', withCorsHeaders(versionGet))
-  // TODO: add auth to routes
-  .put('/car', withCorsHeaders(carPut))
-  .get('/car/:cid', withCorsHeaders(carGet))
-  .put('/', withCorsHeaders(blockPut))
-  .get('/:multihash', withCorsHeaders(blockGet))
+  .get('/version', auth['🤲'](versionGet))
+  .put('/car', auth['🔒'](carPut))
+  .get('/car/:cid', auth['🔒'](carGet))
+  .put('/', auth['🔒'](blockPut))
+  .get('/:multihash', auth['🔒'](blockGet))
 
 /**
  * @param {Error} error

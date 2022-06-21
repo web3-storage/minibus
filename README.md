@@ -26,6 +26,7 @@ One time set up of your cloudflare worker subdomain for dev:
   ```sh
     wrangler secret put SENTRY_DSN --env $(whoami) # Get from Sentry (not required for dev)
     wrangler secret put LOGTAIL_TOKEN --env $(whoami) # Get from Logtail
+    wrangler secret put SALT --env $(whoami) # open `https://csprng.xyz/v1/api` in the browser and use the value of `Data`
   ```
 
 - Add R2 bucket (Note that it is only available as Private Beta at the time of writing)
@@ -62,7 +63,7 @@ TODO: curl example
 The block data is retrieved and discovered by multihash, in order to enable the same data to be referred to with different codecs.
 
 ```sh
-curl -X GET -H 'Authorization: Bearer YOUR_API_KEY' https://minibus.web3.storage/bciqjhirzogurjzpkzpykrusrktg2gcodyhds7o4zctkhyyhtznublca
+curl -X GET -H 'Authorization: Bearer ACCESS_KEY' https://minibus.web3.storage/bciqjhirzogurjzpkzpykrusrktg2gcodyhds7o4zctkhyyhtznublca
 ```
 
 ### 🔒 `PUT /car`
@@ -75,11 +76,9 @@ TODO: curl example
 
 > CAR read interface.
 
-TODO: curl example
-
-## Authentication
-
-TODO
+```sh
+curl -X GET -H 'Authorization: Bearer ACCESS_KEY' https://minibus.web3.storage/car/bafybeicpxveeln3sd4scqlacrunxhzmvslnbgxa72evmqg7r27emdek464
+```
 
 ## Contributing
 

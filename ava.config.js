@@ -5,5 +5,6 @@ export default {
   files: ['test/*.spec.js'],
   timeout: '5m',
   concurrency: 1,
-  nodeArguments: ['--experimental-vm-modules']
+  nodeArguments: ['--experimental-vm-modules'],
+  require: ['./test/_setup-browser-env.js']
 }

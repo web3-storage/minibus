@@ -1,11 +1,11 @@
 import { Response } from '@miniflare/core'
 
+// Temporary until Miniflare supports R2
 export function createR2Bucket () {
   const bucket = new Map()
 
   return {
     put: async (key, value, putOpts = {}) => {
-      // TODO: Store metadata
       bucket.set(key, {
         body: value,
         httpMetadata: putOpts.httpMetadata || {},
