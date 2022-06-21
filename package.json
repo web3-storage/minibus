@@ -1,7 +1,7 @@
 {
-  "name": "edge-block-service",
+  "name": "minibus",
   "version": "1.0.0",
-  "description": "A block service in the edge to store IPFS data structures",
+  "description": "A edge block service to store IPFS data structures",
   "type": "module",
   "main": "./dist/worker.mjs",
   "author": "Vasco Santos <santos.vasco10@gmail.com>",

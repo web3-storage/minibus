@@ -1,7 +1,6 @@
 /* eslint-env serviceworker, browser */
 /* global Response */
 
-// import { CID } from 'multiformats/cid'
 import { concat } from 'uint8arrays/concat'
 import { base32 } from 'multiformats/bases/base32'
 import { CarBlockIterator, CarIndexer } from '@ipld/car'
