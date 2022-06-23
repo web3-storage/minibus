@@ -1,4 +1,18 @@
-/* global crypto */
+import { webcrypto as crypto } from 'crypto'
+
+export async function createJwtCmd (opts) {
+  const name = opts.name || process.env.ENV
+  const token = await sign(
+    {
+      iss: 'web3_storage_minibus',
+      iat: Date.now(),
+      name
+    },
+    process.env.SALT
+  )
+
+  console.log(token)
+}
 
 /** @type {Record<string, HmacImportParams>} */
 const algorithms = {

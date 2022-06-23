@@ -1,7 +1,7 @@
 import test from 'ava'
 
 import { base16 } from 'multiformats/bases/base16'
-import { base32 } from 'multiformats/bases/base32'
+import { base58btc } from 'multiformats/bases/base58'
 
 import { Blob } from '@web-std/fetch'
 import { getMiniflare } from './scripts/utils.js'
@@ -30,6 +30,8 @@ test('can put and get block with default multihash', async (t) => {
   const blockPutResult = await putResponse.json()
   t.truthy(blockPutResult.multihash)
 
+  console.log('res', blockPutResult.multihash)
+
   const getResponse = await mf.dispatchFetch(`https://localhost:8787/${blockPutResult.multihash}`, {
     headers: { Authorization: `Bearer ${token}` }
   })
@@ -54,8 +56,8 @@ test('can put and get block with different multihash encoding', async (t) => {
   const blockPutResult = await putResponse.json()
   t.truthy(blockPutResult.multihash)
 
-  const b32Bytes = base32.decode(blockPutResult.multihash)
-  const b16Multihash = base16.encode(b32Bytes)
+  const b58Bytes = base58btc.decode(blockPutResult.multihash)
+  const b16Multihash = base16.encode(b58Bytes)
 
   const getResponse = await mf.dispatchFetch(`https://localhost:8787/${b16Multihash}`, {
     headers: { Authorization: `Bearer ${token}` }

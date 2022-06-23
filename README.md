@@ -72,15 +72,25 @@ curl -X GET -H 'Authorization: Bearer ACCESS_KEY' https://minibus.web3.storage/b
 
 > Store CAR files by writing the blocks to block storage and writing the CAR header and a CARv2 index of the blocks in R2
 
-TODO: curl example
+__TO BE IMPLEMENTED__
 
-### 🔒 `GET /car:cid`
+### 🔒 `GET /car/:cid`
 
 > CAR read interface.
 
+__TO BE IMPLEMENTED__
+
+## Authentication
+
+Minibus uses JWT tokens for authentication. The SALT needed to create your token can be found in 1password vault for web3.storage project.
+
+You can create your own token by cloning this repo, getting the salt token in an environment variable and run the CLI in this repo as follows:
+
 ```sh
-curl -X GET -H 'Authorization: Bearer ACCESS_KEY' https://minibus.web3.storage/car/bafybeicpxveeln3sd4scqlacrunxhzmvslnbgxa72evmqg7r27emdek464
+SALT=your-salt-secret node scripts/cli.js jwt create
 ```
+
+For development, Miniflare can be used to run this worker. A global with SALT should be injected in order to allow creation of dev tokens.
 
 ## Contributing
 

@@ -1,10 +1,12 @@
 /* eslint-env serviceworker, browser */
 
-import { base32 } from 'multiformats/bases/base32'
+import { base58btc } from 'multiformats/bases/base58'
 import { sha256 } from 'multiformats/hashes/sha2'
-import * as raw from 'multiformats/codecs/raw'
 
+import { MAX_BLOCK_SIZE } from '../constants.js'
 import { JSONResponse } from '../utils/json-response.js'
+
+import { BlockSizeInvalidError } from '../errors.js'
 
 /**
  * @typedef {import('../env').Env} Env
@@ -20,19 +22,21 @@ export async function blockPut (request, env) {
   const buffer = await request.arrayBuffer()
   const data = new Uint8Array(buffer)
 
-  // Get multihash
+  if (data.byteLength >= MAX_BLOCK_SIZE) {
+    throw new BlockSizeInvalidError()
+  }
+
   const digestResult = await sha256.digest(data)
-  // Base 32 encoded for R2 key
-  const key = base32.encode(digestResult.digest)
+  // base58btc encoded for R2 key
+  const key = base58btc.encode(digestResult.bytes)
 
   await env.BLOCKSTORE.put(key, data, {
     customMetadata: {
-      multicodecCode: raw.code,
       digestCode: sha256.code
     }
   })
 
   return new JSONResponse({
-    multihash: key // base32 encoded
+    multihash: key // base58btc encoded
   })
 }

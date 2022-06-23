@@ -38,6 +38,15 @@ export class BlockNotFoundError extends HTTPError {
 }
 BlockNotFoundError.CODE = 'ERROR_BLOCK_NOT_FOUND'
 
+export class BlockSizeInvalidError extends HTTPError {
+  constructor (msg = 'Provided block has invalid size') {
+    super(msg, 400)
+    this.name = 'BlockSizeInvalid'
+    this.code = BlockSizeInvalidError.CODE
+  }
+}
+BlockSizeInvalidError.CODE = 'ERROR_BLOCK_SIZE_INVALID'
+
 export class BaseNotFoundError extends HTTPError {
   constructor (msg = 'Provided encoded base not found') {
     super(msg, 400)
