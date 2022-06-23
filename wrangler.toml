@@ -1,0 +1,31 @@
+# minibus wrangler config.
+name = "minibus"
+main = "./dist/worker.mjs"
+compatibility_date = "2022-05-11"
+
+[build]
+command = "npm run build"
+
+# PROD!
+[env.production]
+# name = "minibus-production"
+account_id = "fffa4b4363a7e5250af8357087263b3a" # Protocol Labs CF account
+route = "minibus.web3.storage/*"
+
+[[env.production.r2_buckets]]
+bucket_name = "blockstore"
+binding = "BLOCKSTORE"
+
+# Staging!
+[env.staging]
+# name = "minibus-staging"
+account_id = "fffa4b4363a7e5250af8357087263b3a" # Protocol Labs CF account
+route = "minibus-staging.web3.storage/*"
+
+[[env.staging.r2_buckets]]
+bucket_name = "blockstore-staging"
+binding = "BLOCKSTORE"
+
+# Test!
+[env.test]
+workers_dev = true
