@@ -7,8 +7,6 @@ import { envAll } from './env.js'
 import { errorHandler } from './error-handler.js'
 import { addCorsHeaders, withCorsHeaders } from './cors.js'
 import { versionGet } from './version.js'
-import { carPut } from './car/put.js'
-import { carGet } from './car/get.js'
 import { blockPut } from './block/put.js'
 import { blockGet } from './block/get.js'
 
@@ -22,8 +20,6 @@ const auth = {
 router
   .all('*', envAll)
   .get('/version', auth['🤲'](versionGet))
-  .put('/car', auth['🔒'](carPut))
-  .get('/car/:cid', auth['🔒'](carGet))
   .put('/', auth['🔒'](blockPut))
   .get('/:multihash', auth['🔒'](blockGet))
 

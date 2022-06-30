@@ -68,18 +68,6 @@ The block data is retrieved and discovered by multihash, in order to enable the 
 curl -X GET -H 'Authorization: Bearer ACCESS_KEY' https://minibus.web3.storage/bciqjhirzogurjzpkzpykrusrktg2gcodyhds7o4zctkhyyhtznublca
 ```
 
-### 🔒 `PUT /car`
-
-> Store CAR files by writing the blocks to block storage and writing the CAR header and a CARv2 index of the blocks in R2
-
-__TO BE IMPLEMENTED__
-
-### 🔒 `GET /car/:cid`
-
-> CAR read interface.
-
-__TO BE IMPLEMENTED__
-
 ## Authentication
 
 Minibus uses JWT tokens for authentication. The SALT needed to create your token can be found in 1password vault for web3.storage project.
