@@ -1,7 +1,10 @@
 import test from 'ava'
 
+import { CID } from 'multiformats/cid'
+import * as raw from 'multiformats/codecs/raw'
 import { base16 } from 'multiformats/bases/base16'
 import { base58btc } from 'multiformats/bases/base58'
+import { sha256 } from 'multiformats/hashes/sha2'
 
 import { Blob } from '@web-std/fetch'
 import { getMiniflare } from './scripts/utils.js'
@@ -29,8 +32,6 @@ test('can put and get block with default multihash', async (t) => {
   })
   const blockPutResult = await putResponse.json()
   t.truthy(blockPutResult.multihash)
-
-  console.log('res', blockPutResult.multihash)
 
   const getResponse = await mf.dispatchFetch(`https://localhost:8787/${blockPutResult.multihash}`, {
     headers: { Authorization: `Bearer ${token}` }
@@ -72,7 +73,7 @@ test('can put and get block with different multihash encoding', async (t) => {
 test('fails to get block not previously added', async (t) => {
   const { mf, token } = t.context
 
-  const validMultihash = 'bciqjhirzogurjzpkzpykrusrktg2gcodyhds7o4zctkhyyhtznublca'
+  const validMultihash = 'zQmYGx7Wzqe5prvEsTSzYBQN8xViYUM9qsWJSF5EENLcNmM'
   const getResponse = await mf.dispatchFetch(`https://localhost:8787/${validMultihash}`, {
     headers: { Authorization: `Bearer ${token}` }
   })
@@ -91,4 +92,29 @@ test('fails to get block when non supported multihash prefix is provided', async
 
   t.deepEqual(getResponse.status, 400)
   t.deepEqual(await getResponse.text(), '"Provided encoded base not found"')
+})
+
+test('redirects to get multihash if tried to get cid', async (t) => {
+  const { mf, token } = t.context
+
+  const data = JSON.stringify({ hello: 'world' })
+  const putBlob = new Blob([data])
+
+  const putResponse = await mf.dispatchFetch('https://localhost:8787', {
+    method: 'PUT',
+    body: putBlob,
+    headers: { Authorization: `Bearer ${token}` }
+  })
+  const blockPutResult = await putResponse.json()
+  t.truthy(blockPutResult.multihash)
+
+  const digestBlob = new Uint8Array(await (new Blob([data])).arrayBuffer())
+  const digest = await sha256.digest(digestBlob)
+  const cid = CID.createV1(raw.code, digest)
+
+  const getResponseFromCid = await mf.dispatchFetch(`https://localhost:8787/${cid.toString()}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+  t.is(getResponseFromCid.status, 301)
+  t.is(getResponseFromCid.headers.get('location'), `https://localhost:8787/${blockPutResult.multihash}`)
 })

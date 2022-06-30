@@ -1,6 +1,7 @@
 /* eslint-env serviceworker, browser */
 /* global Response */
 
+import { CID } from 'multiformats/cid'
 import { base58btc } from 'multiformats/bases/base58'
 
 import { BlockNotFoundError, BaseNotFoundError } from '../errors.js'
@@ -24,8 +25,21 @@ export async function blockGet (request, env, ctx) {
     return res
   }
 
-  const multihash = request.params.multihash
+  const multihashOrCid = request.params.multihash
+
+  // Permanently redirect to multihash if cid provided
+  // Note that CIDv0 and multihash encoded as b58btc will be the same
+  const multihashByCidValue = getMultihashFromCidValue(multihashOrCid)
+  if (multihashByCidValue && multihashByCidValue !== multihashOrCid) {
+    return Response.redirect(
+      request.url.replace(multihashOrCid, multihashByCidValue),
+      301
+    )
+  }
+
+  const multihash = multihashOrCid
   const key = await toBase58btc(multihash, env.bases)
+
   const r2Object = await env.BLOCKSTORE.get(key)
   if (r2Object) {
     res = new Response(r2Object.body)
@@ -40,7 +54,25 @@ export async function blockGet (request, env, ctx) {
 }
 
 /**
- * Encode given multihash into base58btc
+ * Get multihash from CID if provided value is a cid.
+ *
+ * @param {string} value
+ */
+function getMultihashFromCidValue (value) {
+  let multihash
+
+  try {
+    const cid = CID.parse(value)
+    multihash = base58btc.encode(cid.multihash.bytes)
+  } catch (err) {
+    return
+  }
+
+  return multihash
+}
+
+/**
+ * Encode given multihash into base58btc.
  *
  * @param {string} multihash
  * @param {import('ipfs-core-utils/multibases').Multibases} bases
