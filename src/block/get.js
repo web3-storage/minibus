@@ -14,7 +14,7 @@ import { BlockNotFoundError, BaseNotFoundError } from '../errors.js'
  *
  * @param {Request} request
  * @param {Env} env
- * @param {import('./index').Ctx} ctx
+ * @param {import('../index').Ctx} ctx
  */
 export async function blockGet (request, env, ctx) {
   // Get cached block if exists
@@ -25,24 +25,7 @@ export async function blockGet (request, env, ctx) {
   }
 
   const multihash = request.params.multihash
-
-  let base
-  try {
-    const multibasePrefix = multihash[0]
-    base = await env.bases.getBase(multibasePrefix)
-  } catch (err) {
-    throw new BaseNotFoundError()
-  }
-
-  let key = multihash
-  // We use base58btc encoding internally for caching
-  if (base.name !== base58btc.name) {
-    const bytes = base.decoder.decode(multihash)
-
-    // Base 58 encoded for R2 key
-    key = base58btc.encode(bytes)
-  }
-
+  const key = await toBase58btc(multihash, env.bases)
   const r2Object = await env.BLOCKSTORE.get(key)
   if (r2Object) {
     res = new Response(r2Object.body)
@@ -54,4 +37,31 @@ export async function blockGet (request, env, ctx) {
   }
 
   throw new BlockNotFoundError()
+}
+
+/**
+ * Encode given multihash into base58btc
+ *
+ * @param {string} multihash
+ * @param {import('ipfs-core-utils/multibases').Multibases} bases
+ */
+async function toBase58btc (multihash, bases) {
+  let base
+  try {
+    const multibasePrefix = multihash[0]
+    base = await bases.getBase(multibasePrefix)
+  } catch (err) {
+    throw new BaseNotFoundError()
+  }
+
+  let encodedMultihash = multihash
+  // We use base58btc encoding internally for caching
+  if (base.name !== base58btc.name) {
+    const bytes = base.decoder.decode(multihash)
+
+    // Base 58 encoded for R2 key
+    encodedMultihash = base58btc.encode(bytes)
+  }
+
+  return encodedMultihash
 }
