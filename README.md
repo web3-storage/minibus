@@ -26,7 +26,7 @@ One time set up of your cloudflare worker subdomain for dev:
   ```sh
     wrangler secret put SENTRY_DSN --env $(whoami) # Get from Sentry (not required for dev)
     wrangler secret put LOGTAIL_TOKEN --env $(whoami) # Get from Logtail
-    wrangler secret put SALT --env $(whoami) # open `https://csprng.xyz/v1/api` in the browser and use the value of `Data`
+    wrangler secret put SECRET --env $(whoami) # open `https://csprng.xyz/v1/api` in the browser and use the value of `Data`
   ```
 
 - Add R2 bucket (Note that it is only available as Private Beta at the time of writing)
@@ -70,15 +70,11 @@ curl -X GET -H 'Authorization: Bearer ACCESS_KEY' https://minibus.web3.storage/b
 
 ## Authentication
 
-Minibus uses JWT tokens for authentication. The SALT needed to create your token can be found in 1password vault for web3.storage project.
+Minibus uses HTTP basic token for authentication. A secret needs to be provided and must correspond to the secret injected in the worker.
 
-You can create your own token by cloning this repo, getting the salt token in an environment variable and run the CLI in this repo as follows:
+The TOKEN needed can be found in 1password vault for web3.storage project.
 
-```sh
-SALT=your-salt-secret node scripts/cli.js jwt create
-```
-
-For development, Miniflare can be used to run this worker. A global with SALT should be injected in order to allow creation of dev tokens.
+For development, Miniflare can be used to run this worker. A global with TOKEN should be injected in order to allow creation of dev tokens.
 
 ## Contributing
 

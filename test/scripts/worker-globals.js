@@ -1,3 +1,3 @@
 export const globals = {
-  SALT: 'secret'
+  SECRET: 'secret'
 }

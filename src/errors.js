@@ -12,7 +12,7 @@ export class HTTPError extends Error {
 }
 
 export class NoTokenError extends HTTPError {
-  constructor (msg = 'No token found in `Authorization: Bearer ` header') {
+  constructor (msg = 'No token found in `Authorization: Basic ` header') {
     super(msg, 401)
     this.name = 'NoToken'
     this.code = NoTokenError.CODE
@@ -20,14 +20,23 @@ export class NoTokenError extends HTTPError {
 }
 NoTokenError.CODE = 'ERROR_NO_TOKEN'
 
-export class ExpectedBearerStringError extends HTTPError {
-  constructor (msg = 'Expected argument to be a string in the `Bearer {token}` format') {
+export class ExpectedBasicStringError extends HTTPError {
+  constructor (msg = 'Expected argument to be a string in the `Basic {token}` format') {
     super(msg, 401)
-    this.name = 'ExpectedBearerString'
-    this.code = ExpectedBearerStringError.CODE
+    this.name = 'ExpectedBasicString'
+    this.code = ExpectedBasicStringError.CODE
   }
 }
-ExpectedBearerStringError.CODE = 'ERROR_NO_TOKEN'
+ExpectedBasicStringError.CODE = 'ERROR_NO_TOKEN'
+
+export class NoValidTokenError extends HTTPError {
+  constructor (msg = 'Provided token is not valid') {
+    super(msg, 401)
+    this.name = 'NoValidToken'
+    this.code = NoValidTokenError.CODE
+  }
+}
+NoValidTokenError.CODE = 'ERROR_NO_VALID_TOKEN'
 
 export class BlockNotFoundError extends HTTPError {
   constructor (msg = 'Requested block not found') {

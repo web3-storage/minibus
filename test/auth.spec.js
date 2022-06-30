@@ -24,7 +24,7 @@ test('Fails with 401 authentication when invalid token provided', async (t) => {
 
   const response = await mf.dispatchFetch('https://localhost:8787', {
     method: 'PUT',
-    headers: { Authorization: `${token}` } // Not Bearer /token/
+    headers: { Authorization: `${token}` } // Not Basic /token/
   })
   t.is(response.status, 401)
 })

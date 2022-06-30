@@ -1,5 +1,4 @@
-import * as JWT from './utils/jwt.js'
-import { NoTokenError, ExpectedBearerStringError } from './errors.js'
+import { NoTokenError, ExpectedBasicStringError, NoValidTokenError } from './errors.js'
 
 /**
  * Middleware: verify the request is authenticated with a valid JWT token.
@@ -10,13 +9,16 @@ import { NoTokenError, ExpectedBearerStringError } from './errors.js'
 export function withAuthToken (handler) {
   /**
    * @param {Request} request
-   * @param {import('./env').Env}
+   * @param {import('./env').Env} env
    * @returns {Promise<Response>}
    */
   return async (request, env, ctx) => {
     const token = getTokenFromRequest(request)
 
-    await JWT.verify(token, env.SALT)
+    console.log('token', token, 'secret', env.SECRET)
+    if (token !== env.SECRET) {
+      throw new NoValidTokenError()
+    }
     return handler(request, env, ctx)
   }
 }
@@ -35,9 +37,9 @@ function getTokenFromRequest (request) {
 }
 
 function parseAuthorizationHeader (header) {
-  if (!header.toLowerCase().startsWith('bearer ')) {
-    throw new ExpectedBearerStringError()
+  if (!header.toLowerCase().startsWith('basic ')) {
+    throw new ExpectedBasicStringError()
   }
 
-  return header.substring(7)
+  return header.substring(6)
 }
