@@ -14,8 +14,6 @@ export function withAuthToken (handler) {
    */
   return async (request, env, ctx) => {
     const token = getTokenFromRequest(request)
-
-    console.log('token', token, 'secret', env.SECRET)
     if (token !== env.SECRET) {
       throw new NoValidTokenError()
     }
