@@ -65,7 +65,7 @@ TODO: curl example
 The block data is retrieved and discovered by multihash, in order to enable the same data to be referred to with different codecs.
 
 ```sh
-curl -X GET -H 'Authorization: Bearer ACCESS_KEY' https://minibus.web3.storage/bciqjhirzogurjzpkzpykrusrktg2gcodyhds7o4zctkhyyhtznublca
+curl -X GET -H 'Authorization: Basic ACCESS_KEY' https://minibus.web3.storage/bciqjhirzogurjzpkzpykrusrktg2gcodyhds7o4zctkhyyhtznublca
 ```
 
 ## Authentication
