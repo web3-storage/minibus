@@ -7,9 +7,9 @@
   "author": "Vasco Santos <santos.vasco10@gmail.com>",
   "license": "Apache-2.0 OR MIT",
   "scripts": {
-    "build": "node scripts/cli.js build",
+    "build": "tsc && node scripts/cli.js build",
     "dev": "miniflare dist/worker.mjs --watch --debug -m",
-    "test": "tsc && npm run test:worker",
+    "test": "npm run build && npm run test:worker",
     "test:worker": "ava --verbose test/*.spec.js",
     "lint": "standard"
   },
