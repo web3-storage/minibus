@@ -42,7 +42,11 @@ export async function blockGet (request, env, ctx) {
 
   const r2Object = await env.BLOCKSTORE.get(key)
   if (r2Object) {
-    res = new Response(r2Object.body)
+    res = new Response(r2Object.body, {
+      headers: {
+        'Cache-Control': 'immutable'
+      }
+    })
 
     // Store in cache
     ctx.waitUntil(cache.put(request, res.clone()))
