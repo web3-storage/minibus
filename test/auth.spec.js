@@ -13,7 +13,7 @@ test('Fails with 401 authentication when no token provided', async (t) => {
   const { mf } = t.context
 
   const response = await mf.dispatchFetch('https://localhost:8787', {
-    method: 'PUT'
+    method: 'POST'
   })
   t.is(response.status, 401)
 })
@@ -23,7 +23,7 @@ test('Fails with 401 authentication when invalid token provided', async (t) => {
   const token = await createTestToken()
 
   const response = await mf.dispatchFetch('https://localhost:8787', {
-    method: 'PUT',
+    method: 'POST',
     headers: { Authorization: `${token}` } // Not Basic /token/
   })
   t.is(response.status, 401)

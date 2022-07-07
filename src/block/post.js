@@ -13,12 +13,12 @@ import { BlockSizeInvalidError } from '../errors.js'
  */
 
 /**
- * Handle block put request
+ * Handle block post request
  *
  * @param {Request} request
  * @param {Env} env
  */
-export async function blockPut (request, env) {
+export async function blockPost (request, env) {
   const buffer = await request.arrayBuffer()
   const data = new Uint8Array(buffer)
 
