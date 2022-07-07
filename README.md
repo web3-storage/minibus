@@ -52,7 +52,7 @@ The Edge HTTP internal API to store IPFS data structures on R2.
 
 You can see full HTTP API specification at https://web3.storage/block-service-docs.
 
-### 🔒 `PUT /`
+### 🔒 `POST /`
 
 > Store individuals blocks by multihash in R2.
 
