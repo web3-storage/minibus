@@ -19,52 +19,52 @@ test.beforeEach(async (t) => {
   }
 })
 
-test('can put and get block with default multihash', async (t) => {
+test('can post and get block with default multihash', async (t) => {
   const { mf, token } = t.context
 
   const data = JSON.stringify({ hello: 'world' })
-  const putBlob = new Blob([data])
+  const postBlob = new Blob([data])
 
-  const putResponse = await mf.dispatchFetch('https://localhost:8787', {
-    method: 'PUT',
-    body: putBlob,
+  const postResponse = await mf.dispatchFetch('https://localhost:8787', {
+    method: 'POST',
+    body: postBlob,
     headers: { Authorization: `Basic ${token}` }
   })
-  const blockPutResult = await putResponse.json()
-  t.truthy(blockPutResult.multihash)
+  const blockPostResult = await postResponse.json()
+  t.truthy(blockPostResult.multihash)
 
-  const getResponse = await mf.dispatchFetch(`https://localhost:8787/${blockPutResult.multihash}`, {
+  const getResponse = await mf.dispatchFetch(`https://localhost:8787/${blockPostResult.multihash}`, {
     headers: { Authorization: `Basic ${token}` }
   })
   const getBlob = await getResponse.blob()
-  t.deepEqual(putBlob.size, getBlob.size)
+  t.deepEqual(postBlob.size, getBlob.size)
 
   const getData = await getBlob.text()
   t.deepEqual(data, getData)
 })
 
-test('can put and get block with different multihash encoding', async (t) => {
+test('can post and get block with different multihash encoding', async (t) => {
   const { mf, token } = t.context
 
   const data = JSON.stringify({ hello: 'world' })
-  const putBlob = new Blob([data])
+  const postBlob = new Blob([data])
 
-  const putResponse = await mf.dispatchFetch('https://localhost:8787', {
-    method: 'PUT',
-    body: putBlob,
+  const postResponse = await mf.dispatchFetch('https://localhost:8787', {
+    method: 'POST',
+    body: postBlob,
     headers: { Authorization: `Basic ${token}` }
   })
-  const blockPutResult = await putResponse.json()
-  t.truthy(blockPutResult.multihash)
+  const blockPostResult = await postResponse.json()
+  t.truthy(blockPostResult.multihash)
 
-  const b58Bytes = base58btc.decode(blockPutResult.multihash)
+  const b58Bytes = base58btc.decode(blockPostResult.multihash)
   const b16Multihash = base16.encode(b58Bytes)
 
   const getResponse = await mf.dispatchFetch(`https://localhost:8787/${b16Multihash}`, {
     headers: { Authorization: `Basic ${token}` }
   })
   const getBlob = await getResponse.blob()
-  t.deepEqual(putBlob.size, getBlob.size)
+  t.deepEqual(postBlob.size, getBlob.size)
 
   const getData = await getBlob.text()
   t.deepEqual(data, getData)
@@ -98,15 +98,15 @@ test('redirects to get multihash if tried to get cid', async (t) => {
   const { mf, token } = t.context
 
   const data = JSON.stringify({ hello: 'world' })
-  const putBlob = new Blob([data])
+  const postBlob = new Blob([data])
 
-  const putResponse = await mf.dispatchFetch('https://localhost:8787', {
-    method: 'PUT',
-    body: putBlob,
+  const postResponse = await mf.dispatchFetch('https://localhost:8787', {
+    method: 'POST',
+    body: postBlob,
     headers: { Authorization: `Basic ${token}` }
   })
-  const blockPutResult = await putResponse.json()
-  t.truthy(blockPutResult.multihash)
+  const blockPostResult = await postResponse.json()
+  t.truthy(blockPostResult.multihash)
 
   const digestBlob = new Uint8Array(await (new Blob([data])).arrayBuffer())
   const digest = await sha256.digest(digestBlob)
@@ -116,5 +116,5 @@ test('redirects to get multihash if tried to get cid', async (t) => {
     headers: { Authorization: `Basic ${token}` }
   })
   t.is(getResponseFromCid.status, 301)
-  t.is(getResponseFromCid.headers.get('location'), `https://localhost:8787/${blockPutResult.multihash}`)
+  t.is(getResponseFromCid.headers.get('location'), `https://localhost:8787/${blockPostResult.multihash}`)
 })
