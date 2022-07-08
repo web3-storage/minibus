@@ -7,8 +7,7 @@ import { envAll } from './env.js'
 import { errorHandler } from './error-handler.js'
 import { addCorsHeaders, withCorsHeaders } from './cors.js'
 import { versionGet } from './version.js'
-import { blockPost } from './block/post.js'
-import { blockGet } from './block/get.js'
+import { blockPost, blockGet, blockHead } from './block/index.js'
 
 const router = Router()
 
@@ -22,6 +21,7 @@ router
   .get('/version', auth['🤲'](versionGet))
   .post('/', auth['🔒'](blockPost))
   .get('/:multihash', auth['🔒'](blockGet))
+  .head('/:multihash', auth['🔒'](blockHead))
 
 /**
  * @param {Error} error

@@ -9,20 +9,13 @@ import { BlockNotFoundError } from '../errors.js'
  */
 
 /**
- * Handle block get request
+ * Handle block head request
  *
  * @param {Request} request
  * @param {Env} env
  * @param {import('../index').Ctx} ctx
  */
-export async function blockGet (request, env, ctx) {
-  // Get cached block if exists
-  const cache = caches.default
-  let res = await cache.match(request)
-  if (res) {
-    return res
-  }
-
+export async function blockHead (request, env, ctx) {
   const multihashOrCid = request.params.multihash
 
   // Permanently redirect to multihash if cid provided
@@ -38,18 +31,13 @@ export async function blockGet (request, env, ctx) {
   const multihash = multihashOrCid
   const key = await toBase58btc(multihash, env.bases)
 
-  const r2Object = await env.BLOCKSTORE.get(key)
+  const r2Object = await env.BLOCKSTORE.head(key)
   if (r2Object) {
-    res = new Response(r2Object.body, {
+    return new Response(undefined, {
       headers: {
-        'Cache-Control': 'immutable'
+        'Content-length': `${r2Object.size}`
       }
     })
-
-    // Store in cache
-    ctx.waitUntil(cache.put(request, res.clone()))
-
-    return res
   }
 
   throw new BlockNotFoundError()
