@@ -82,6 +82,40 @@ test('fails to get block not previously added', async (t) => {
   t.deepEqual(await getResponse.text(), '"Requested block not found"')
 })
 
+test('can post and block head', async (t) => {
+  const { mf, token } = t.context
+
+  const data = JSON.stringify({ hello: 'world' })
+  const postBlob = new Blob([data])
+
+  const postResponse = await mf.dispatchFetch('https://localhost:8787', {
+    method: 'POST',
+    body: postBlob,
+    headers: { Authorization: `Basic ${token}` }
+  })
+  const blockPostResult = await postResponse.json()
+  t.truthy(blockPostResult.multihash)
+
+  const headResponse = await mf.dispatchFetch(`https://localhost:8787/${blockPostResult.multihash}`, {
+    method: 'HEAD',
+    headers: { Authorization: `Basic ${token}` }
+  })
+  t.deepEqual(postBlob.size, Number(headResponse.headers.get('content-length')))
+})
+
+test('head block fails when not previously added', async (t) => {
+  const { mf, token } = t.context
+
+  const validMultihash = 'zQmYGx7Wzqe5prvEsTSzYBQN8xViYUM9qsWJSF5EENLcNmM'
+  const headResponse = await mf.dispatchFetch(`https://localhost:8787/${validMultihash}`, {
+    method: 'HEAD',
+    headers: { Authorization: `Basic ${token}` }
+  })
+
+  t.deepEqual(headResponse.status, 404)
+  t.deepEqual(await headResponse.text(), '"Requested block not found"')
+})
+
 test('fails to get block when non supported multihash prefix is provided', async (t) => {
   const { mf, token } = t.context
 
