@@ -57,7 +57,7 @@ You can see full HTTP API specification at https://web3.storage/block-service-do
 > Store individuals blocks by multihash in R2.
 
 ```sh
-echo -e '{"hello":"world"}' | curl -X PUT  -H 'Authorization: Basic ACCESS_KEY=' --data-binary @- https://minibus.web3.storage
+echo -e '{"hello":"world"}' | curl -X POST  -H 'Authorization: Basic ACCESS_KEY=' --data-binary @- https://minibus.web3.storage
 ```
 
 ### 🔒 `GET /:multihash`
