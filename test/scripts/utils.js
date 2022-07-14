@@ -2,7 +2,6 @@ import fs from 'fs'
 import path from 'path'
 import { Miniflare } from 'miniflare'
 
-import { createR2Bucket } from './r2.js'
 import { globals } from './worker-globals.js'
 
 export function getMiniflare () {
@@ -24,9 +23,9 @@ export function getMiniflare () {
     buildCommand: undefined,
     wranglerConfigEnv: 'test',
     modules: true,
+    r2Buckets: ['BLOCKSTORE'],
     bindings: {
-      ...globals,
-      BLOCKSTORE: createR2Bucket()
+      ...globals
     }
   })
 }
