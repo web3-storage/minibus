@@ -51,6 +51,7 @@ jobs:
           apiToken: ${{secrets.CF_API_TOKEN }}
           environment: 'staging'
   release:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.changelog.outputs.releases_created
     name: Release
     runs-on: ubuntu-latest
     needs: test
