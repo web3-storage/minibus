@@ -32,7 +32,7 @@ export async function blockPost (request, env) {
 
   await env.BLOCKSTORE.put(key, data, {
     customMetadata: {
-      digestCode: sha256.code
+      digestCode: String(sha256.code)
     }
   })
 
